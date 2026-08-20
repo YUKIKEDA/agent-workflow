@@ -38,6 +38,8 @@ parent-created
 
 分割前に `## 未決` は空（項目なし、または「なし」のみ）。
 
+親の **作成は `to-parent-issue` のみ**。`grill-me` は要約だけで `gh issue create` しない。`to-parent-issue` は create の前に、同じゴールの `parent-created` 親が無いか探す。あれば再利用し、二通目は開かない。
+
 ## ループ状態（この 7 値のみ）
 
 遷移のスキップは禁止。

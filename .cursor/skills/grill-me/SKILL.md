@@ -20,4 +20,4 @@ If a question can be answered by exploring the codebase, explore the codebase in
 
 合意が閉じたら、要約をチャットに出す（ゴール / 非ゴール / 制約 / Acceptance / 決定済み / 未決は空）。
 
-そのあと [../to-parent-issue/SKILL.md](../to-parent-issue/SKILL.md) に従い親 Issue を作る。まだ作らないなら、人間に「親 Issue を作るか」だけ確認する。
+**親 Issue は作らない。** `gh issue create` も [to-parent-issue](../to-parent-issue/SKILL.md) も、このスキルからは実行しない。作成は呼び出し元（`/dev-loop` または人間の `/to-parent-issue`）が一度だけ行う。単体 `/grill-me` なら、次は `/to-parent-issue` だと伝える。

@@ -28,7 +28,7 @@ disable-model-invocation: true
 
 | 状態                 | 行うこと                                                                                                                                                                       |
 | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| （親なし）           | [grill-me](../grill-me/SKILL.md) → [to-parent-issue](../to-parent-issue/SKILL.md)                                                                                              |
+| （親なし）           | [grill-me](../grill-me/SKILL.md)（Issue は作らせない）→ 要約後に一度だけ [to-parent-issue](../to-parent-issue/SKILL.md) |
 | `parent-created`     | [plan-review](../plan-review/SKILL.md)                                                                                                                                         |
 | `in-review`          | 指摘が残っていれば修正を待つ / 再レビュー。無ければ合格処理                                                                                                                    |
 | `awaiting-split`     | **停止**。人間の「分割してよい」のあと [split-issues](../split-issues/SKILL.md)                                                                                                |
@@ -54,3 +54,4 @@ disable-model-invocation: true
 - ゲート①②をエージェント判断で通過する
 - 未達サブを黙って落とす
 - デフォルトブランチへゲート②なしでマージする
+- 親 Issue を `grill-me` 内で作る（作成は `to-parent-issue` のみ。二通目を開かない）
