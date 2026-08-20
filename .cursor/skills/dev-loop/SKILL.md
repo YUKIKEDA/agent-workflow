@@ -26,16 +26,16 @@ disable-model-invocation: true
 
 ## 状態 → 次の一手（スキップ禁止）
 
-| 状態 | 行うこと |
-| --- | --- |
-| （親なし） | [grill-me](../grill-me/SKILL.md) → [to-parent-issue](../to-parent-issue/SKILL.md) |
-| `parent-created` | [plan-review](../plan-review/SKILL.md) |
-| `in-review` | 指摘が残っていれば修正を待つ / 再レビュー。無ければ合格処理 |
-| `awaiting-split` | **停止**。人間の「分割してよい」のあと [split-issues](../split-issues/SKILL.md) |
-| `implementing` | 下記「並列実装」 |
-| `awaiting-scope-cut` | **停止**。人間のスコープ縮小を待つ。その後 [integrate](../integrate/SKILL.md) を再実行 |
-| `awaiting-main` | [security-review](../security-review/SKILL.md) を未実施なら並行。**停止**。人間の「マージしてよい」のあと integrate のマージ手順 |
-| `done` | [retro](../retro/SKILL.md) を提案。ADR は `/accept-adr` |
+| 状態                 | 行うこと                                                                                                                         |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| （親なし）           | [grill-me](../grill-me/SKILL.md) → [to-parent-issue](../to-parent-issue/SKILL.md)                                                |
+| `parent-created`     | [plan-review](../plan-review/SKILL.md)                                                                                           |
+| `in-review`          | 指摘が残っていれば修正を待つ / 再レビュー。無ければ合格処理                                                                      |
+| `awaiting-split`     | **停止**。人間の「分割してよい」のあと [split-issues](../split-issues/SKILL.md)                                                  |
+| `implementing`       | 下記「並列実装」                                                                                                                 |
+| `awaiting-scope-cut` | **停止**。人間のスコープ縮小を待つ。その後 [integrate](../integrate/SKILL.md) を再実行                                           |
+| `awaiting-main`      | [security-review](../security-review/SKILL.md) を未実施なら並行。**停止**。人間の「マージしてよい」のあと [integrate](../integrate/SKILL.md)（`awaiting-main` ならマージ手順） |
+| `done`               | [retro](../retro/SKILL.md) を提案。ADR は `/accept-adr`                                                                          |
 
 ## 並列実装
 
@@ -44,7 +44,7 @@ disable-model-invocation: true
 - Cursor のサブエージェントで [implement](../implement/SKILL.md) を Issue ごとに起動する。プロンプトに親番号・子番号・「protocol と implement を読め」を含める。
 - 3 件走っている間はキュー。1 件終わったら次の未ブロックを繰り上げる（Blocked-by がマージ済みになったら `blocked` を外す）。
 - サブエージェント完了後、親イベントと PR 状態を見て、必要なら acceptance-check の結果を確認する。
-- 全部マージ済み（または人間がスコープ縮小済み）なら [integrate](../integrate/SKILL.md)。
+- スコープ内が全部マージ済み（または人間がスコープ縮小して閉じた）なら [integrate](../integrate/SKILL.md)。
 
 単体 `/implement #子` で進んだ分も、親のイベントとチェックリストで拾う。
 

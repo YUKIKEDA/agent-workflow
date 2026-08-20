@@ -42,15 +42,15 @@ parent-created
 
 遷移のスキップは禁止。
 
-| 値                   | 意味                                          |
-| -------------------- | --------------------------------------------- |
-| `parent-created`     | 親あり、レビュー前                            |
-| `in-review`          | plan-review 中、または指摘対応中              |
-| `awaiting-split`     | レビュー通過、ゲート①待ち                     |
-| `implementing`       | ループブランチあり、サブ実装中                |
-| `awaiting-main`      | 全サブがループブランチ入り、ゲート②の PR あり |
-| `done`               | デフォルトブランチへマージ済み                |
-| `awaiting-scope-cut` | 未達サブあり、integrate 不可                  |
+| 値                   | 意味                                                    |
+| -------------------- | ------------------------------------------------------- |
+| `parent-created`     | 親あり、レビュー前                                      |
+| `in-review`          | plan-review 中、または指摘対応中                        |
+| `awaiting-split`     | レビュー通過、ゲート①待ち                               |
+| `implementing`       | ループブランチあり、サブ実装中                          |
+| `awaiting-main`      | スコープ内のサブがループブランチ入り、ゲート②の PR あり |
+| `done`               | デフォルトブランチへマージ済み                          |
+| `awaiting-scope-cut` | 未達サブあり、integrate 不可                            |
 
 壁打ち中は親が無い。`## ループ状態` はまだ存在しない。
 
@@ -139,8 +139,9 @@ ADR 承認はマージと独立。GitHub 上で人間が先にマージしたら
 - Acceptance または必須 Checks の失敗: 同じサブを **1 回だけ** 再実行（`implement.retry`）。だめならマージせず `acceptance-failed`、他の未ブロックを続ける
 - Checks が 1 つでもあれば緑必須。無ければ Acceptance のみ
 - Checks 待ち: 短くポーリング（目安 30 秒 × 10）。超えたら `ci.timeout`、未マージのまま
-- 未マージサブが残る間は `/integrate` は PR を出さない（状態 `awaiting-scope-cut`、`integrate.blocked`）
-- 人間が未達を親の非ゴールへ移し、該当サブを閉じたら `scope.cut`。その後のループブランチで PR 可
+- スコープ内の未マージサブが残る間は `/integrate` は PR を出さない（状態 `awaiting-scope-cut`、`integrate.blocked`）
+- 人間が未達を親の非ゴールへ移し、該当サブを閉じたら `scope.cut`。閉じたサブはループブランチに入っていなくてよい。残ったスコープ内が揃えば PR 可
+- `/integrate` は `implementing` / `awaiting-scope-cut` / `awaiting-main` で開始できる。`awaiting-main` では既存のゲート② PR のマージ手順へ（作り直ししない）
 
 ## `/dev-loop` 再開
 
