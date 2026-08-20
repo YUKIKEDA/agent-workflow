@@ -40,7 +40,7 @@ disable-model-invocation: true
    ```
 
    PR 本文に `Closes #子` は **付けない**（デフォルトブランチへ閉じない）。`Slice: #子` / `Parent: #親` を書く。
-6. [acceptance-check](../acceptance-check/SKILL.md) を実行する。失敗なら手順 3–6 を **同じサブで 1 回だけ** 繰り返し、親に `implement.retry`。それでもだめならマージせず `acceptance-failed`、`acceptance.fail`、終了（他スライスは止めない）。
-7. Checks がある PR は緑を待つ（30 秒 × 最大 10）。超えたら `ci.timeout`、未マージ。
+6. Checks がある PR は **acceptance-check の前に** 緑を待つ（30 秒 × 最大 10）。pending は待つ。完了して失敗なら Checks 失敗（手順 7 の再実行対象）。超えてまだ pending なら `ci.timeout`、未マージで終了（`acceptance-failed` にしない）。
+7. [acceptance-check](../acceptance-check/SKILL.md) を実行する。Acceptance または完了済み Checks の失敗なら手順 3–7 を **同じサブで 1 回だけ** 繰り返し、親に `implement.retry`。それでもだめならマージせず `acceptance-failed`、`acceptance.fail`、終了（他スライスは止めない）。
 8. 通過したらループブランチへマージ（`gh pr merge --merge`。リポジトリが squash 必須ならそれに合わせる）。親に `pr.merged`。子の `acceptance-failed` は外す。親チェックリストがあれば `[x]`。
 9. 権限が要れば止めて `permission`。

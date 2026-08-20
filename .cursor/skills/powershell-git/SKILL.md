@@ -62,12 +62,8 @@ $body = @"
 
 ## Checklist
 - [ ] PR title follows Conventional Commits (`type(scope): subject`)
-- [ ] `dotnet build Graft.slnx` succeeds
-- [ ] CSharpier applied to touched C# (format on save or `dotnet csharpier format`)
-- [ ] Hosted CI (`.github/workflows/ci.yml`) is green
-- [ ] No unintentional new StyleCop warnings in touched files
-- [ ] If M0 work: linked the relevant Batch in **Related** / `task_m0.md` updated if needed
-- [ ] Docs updated when behavior or workflow changed (`AGENTS.md`, `.dev/*`, rules) — or N/A
+- [ ] `.\scripts\sync-cursor-skills.ps1` run after editing `skills/` (or N/A)
+- [ ] Docs updated when behavior or workflow changed (`README.md`, `skills/protocol/reference.md`) — or N/A
 "@
 gh pr create --title "type(scope): subject" --body $body
 ```

@@ -103,7 +103,7 @@ setup が作る。状態機械には使わない。
 - デフォルトブランチ: `gh repo view --json defaultBranchRef --jq .defaultBranchRef.name`（`main` と決めない）
 - ゲート①直後: デフォルトから `loop/#<親>` を切って push。空コミット不要
 - サブ PR の `--base` はループブランチ、`--head` はサブ枝
-- ブランチ名の `#` はシェルでコメントになるため、**常に引用する**
+- ブランチ名の `#` はシェルでコメントになるため、**常に引用する**（例: `git diff "origin/<default>...origin/loop/#<親>"`）
 - デフォルトブランチへはゲート②のあとだけ
 
 ## イベントコメント
@@ -138,7 +138,7 @@ ADR 承認はマージと独立。GitHub 上で人間が先にマージしたら
 - `/dev-loop` は `blocked` でも `acceptance-failed` でもない `slice` を最大 **3** 件まで並列起動
 - Acceptance または必須 Checks の失敗: 同じサブを **1 回だけ** 再実行（`implement.retry`）。だめならマージせず `acceptance-failed`、他の未ブロックを続ける
 - Checks が 1 つでもあれば緑必須。無ければ Acceptance のみ
-- Checks 待ち: 短くポーリング（目安 30 秒 × 10）。超えたら `ci.timeout`、未マージのまま
+- Checks 待ちは `acceptance-check` **より先**（目安 30 秒 × 10）。pending を `acceptance.fail` にしない。超えてまだ pending なら `ci.timeout`、未マージのまま（`acceptance-failed` にしない）
 - スコープ内の未マージサブが残る間は `/integrate` は PR を出さない（状態 `awaiting-scope-cut`、`integrate.blocked`）
 - 人間が未達を親の非ゴールへ移し、該当サブを閉じたら `scope.cut`。閉じたサブはループブランチに入っていなくてよい。残ったスコープ内が揃えば PR 可
 - `/integrate` は `implementing` / `awaiting-scope-cut` / `awaiting-main` で開始できる。`awaiting-main` では既存のゲート② PR のマージ手順へ（作り直ししない）
@@ -159,7 +159,7 @@ ADR 承認はマージと独立。GitHub 上で人間が先にマージしたら
 
 ## セキュリティ
 
-対象はループブランチとデフォルトブランチの差分。秘密情報、注入、認可、パストラバーサル、変更箇所の依存。High/Critical は `main` ブロッカー（`security-blocker`）。waiver はゲート②の人間だけ。攻撃手順や PoC は書かない。
+対象はループブランチとデフォルトブランチの差分（`git diff "origin/<default>...origin/loop/#<親>"`。`#` を含む ref は引用する）。秘密情報、注入、認可、パストラバーサル、変更箇所の依存。High/Critical は `main` ブロッカー（`security-blocker`）。waiver はゲート②の人間だけ。攻撃手順や PoC は書かない。
 
 ## gh / シェル
 

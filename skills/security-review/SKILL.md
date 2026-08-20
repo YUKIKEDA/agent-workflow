@@ -14,7 +14,14 @@ disable-model-invocation: true
 
 ## 対象
 
-ループブランチ `loop/#<親>` とデフォルトブランチの差分（`git diff origin/<default>...origin/loop/#親`）。リポジトリ全体の pentest はしない。
+ループブランチ `"loop/#<親>"` とデフォルトブランチの差分。`#` を含む ref は引用する（しないとシェルがコメントとして切る）:
+
+```powershell
+git fetch origin
+git diff "origin/<default>...origin/loop/#<親>"
+```
+
+リポジトリ全体の pentest はしない。
 
 ## 見るもの
 
